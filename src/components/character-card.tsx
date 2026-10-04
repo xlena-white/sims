@@ -21,7 +21,6 @@ export function CharacterCard({ character }: { character: Character }) {
           <div className="flex h-full items-center justify-center">
             <span
               className={`font-display text-6xl font-bold opacity-80 transition-transform duration-300 group-hover:scale-110 ${accent.text}`}
-              style={{ fontVariationSettings: '"SOFT" 100, "WONK" 1' }}
             >
               {initials(character.name)}
             </span>

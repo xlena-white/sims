@@ -70,7 +70,6 @@ export default async function HomePage() {
                     <span
                       aria-hidden
                       className={`font-display text-6xl font-bold leading-none opacity-90 transition-transform duration-300 group-hover:-rotate-6 ${accent.text}`}
-                      style={{ fontVariationSettings: '"SOFT" 100, "WONK" 1' }}
                     >
                       {gen.number}
                     </span>

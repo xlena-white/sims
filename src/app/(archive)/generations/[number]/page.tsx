@@ -63,7 +63,6 @@ export default async function GenerationPage({ params }: PageProps<"/generations
           <span
             aria-hidden
             className={`hidden font-display text-[11rem] font-bold leading-[0.8] opacity-20 md:block ${accent.text}`}
-            style={{ fontVariationSettings: '"SOFT" 100, "WONK" 1' }}
           >
             {n}
           </span>

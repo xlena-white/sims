@@ -84,7 +84,7 @@ export default async function CharacterPage({ params }: PageProps<"/characters/[
             <img src={character.photo_url} alt={character.name} className="h-full w-full object-cover" />
           ) : (
             <div className="flex h-full items-center justify-center bg-ink">
-              <span className={`font-display text-8xl font-bold ${accent.text}`} style={{ fontVariationSettings: '"SOFT" 100, "WONK" 1' }}>
+              <span className={`font-display text-8xl font-bold ${accent.text}`}>
                 {initials(character.name)}
               </span>
             </div>

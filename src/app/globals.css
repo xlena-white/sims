@@ -23,7 +23,7 @@
   --color-stone: #c9c4ba;
   --color-danger: #f28b82;
 
-  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-display: var(--font-jakarta), system-ui, sans-serif;
   --font-sans: var(--font-dm-sans), system-ui, sans-serif;
 
   --animate-rise: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
@@ -57,9 +57,8 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Soft, friendly serif for headings */
   .font-display {
-    font-variation-settings: "SOFT" 100, "WONK" 0;
+    letter-spacing: -0.02em;
   }
 
   ::selection {
