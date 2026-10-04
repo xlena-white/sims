@@ -1,0 +1,23 @@
+"use server";
+
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+
+export interface LoginState {
+  error: string | null;
+}
+
+export async function login(_prev: LoginState, formData: FormData): Promise<LoginState> {
+  const email = String(formData.get("email") ?? "").trim();
+  const password = String(formData.get("password") ?? "");
+  const next = String(formData.get("next") ?? "/");
+
+  if (!email || !password) return { error: "Please enter your email and password." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) return { error: "Those details don't match our records." };
+
+  // Only allow redirects back into this site.
+  redirect(next.startsWith("/") && !next.startsWith("//") ? next : "/");
+}

@@ -1,0 +1,169 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* Neutral charcoal base */
+  --color-ink: #131314;          /* page background */
+  --color-ink-raised: #1c1c1f;   /* cards, panels */
+  --color-ink-hover: #242428;    /* raised + hover */
+  --color-ink-line: #2e2e33;     /* borders */
+
+  /* Text */
+  --color-chalk: #f3f0ea;        /* primary text, soft off-white */
+  --color-chalk-muted: #aeaaa2;  /* secondary text */
+  --color-chalk-faint: #75726c;  /* tertiary text */
+
+  /* Playful accents */
+  --color-mint: #8ee4a1;         /* plumbob green, the main accent */
+  --color-peach: #f5a98b;
+  --color-lilac: #b8a7f5;
+  --color-sky: #8ccaf2;
+  --color-butter: #f2d67c;
+  --color-rose: #f29bb8;
+  --color-stone: #c9c4ba;
+  --color-danger: #f28b82;
+
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
+
+  --animate-rise: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-fade: fade 1.2s ease both;
+  --animate-bob: bob 3.2s ease-in-out infinite;
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(3deg); }
+  }
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-chalk);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Soft, friendly serif for headings */
+  .font-display {
+    font-variation-settings: "SOFT" 100, "WONK" 0;
+  }
+
+  ::selection {
+    background: var(--color-mint);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-mint);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  /* Small uppercase label above headings */
+  .label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 9999px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .card {
+    border-radius: 1.25rem;
+    border: 1px solid var(--color-ink-line);
+    background: var(--color-ink-raised);
+  }
+
+  .field {
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-ink-line);
+    background: var(--color-ink);
+    padding: 0.65rem 0.9rem;
+    color: var(--color-chalk);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-mint);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-mint) 20%, transparent);
+  }
+  .field::placeholder {
+    color: var(--color-chalk-faint);
+  }
+  select.field {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%23aeaaa2' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    padding-right: 2.2rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    padding: 0.7rem 1.4rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: transform 0.15s, background 0.2s, color 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+  .btn:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: wait;
+  }
+  .btn-primary {
+    background: var(--color-mint);
+    color: var(--color-ink);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: #a6ecb5;
+  }
+  .btn-ghost {
+    border: 1px solid var(--color-ink-line);
+    color: var(--color-chalk);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    border-color: var(--color-chalk-faint);
+    background: var(--color-ink-hover);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
