@@ -4,6 +4,7 @@ import { initials } from "./avatar";
 
 export function CharacterCard({ character }: { character: Character }) {
   const accent = GEN_ACCENT[character.generation];
+  const dead = character.life_status === "dead";
   return (
     <Link
       href={`/characters/${character.slug}`}
@@ -15,16 +16,19 @@ export function CharacterCard({ character }: { character: Character }) {
           <img
             src={character.photo_url}
             alt={character.name}
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className={`h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 ${dead ? "grayscale" : ""}`}
           />
         ) : (
           <div className="flex h-full items-center justify-center">
             <span
-              className={`font-display text-6xl font-bold opacity-80 transition-transform duration-300 group-hover:scale-110 ${accent.text}`}
+              className={`font-display text-6xl font-bold opacity-80 transition-transform duration-300 group-hover:scale-110 ${dead ? "text-stone" : accent.text}`}
             >
               {initials(character.name)}
             </span>
           </div>
+        )}
+        {dead && (
+          <span className="pill absolute right-3 top-3 bg-ink/80 text-xs text-stone backdrop-blur">Passed away</span>
         )}
         {character.moral_alignment && (
           <span className="pill absolute left-3 top-3 bg-ink/80 text-xs text-chalk backdrop-blur">

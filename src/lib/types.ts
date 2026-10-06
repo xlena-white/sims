@@ -29,8 +29,12 @@ export interface Character {
   tagline: string | null;
   moral_alignment: string | null;
   career_current: string | null;
+  career_position: string | null;
   career_endgame: string | null;
   past_jobs: string[];
+  life_status: "alive" | "dead";
+  cause_of_death: string | null;
+  death_note: string | null;
   relationship_status: string | null;
   current_partner_id: string | null;
   current_partner_name: string | null;
@@ -44,7 +48,7 @@ export interface Character {
 
 export type CharacterLite = Pick<
   Character,
-  "id" | "slug" | "name" | "generation" | "photo_url" | "parent_one_id" | "parent_two_id"
+  "id" | "slug" | "name" | "generation" | "photo_url" | "parent_one_id" | "parent_two_id" | "life_status"
 >;
 
 export interface Storyline {

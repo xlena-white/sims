@@ -85,8 +85,12 @@ create table if not exists public.characters (
   tagline text,                 -- optional one-liner for character cards
   moral_alignment text,         -- e.g. 'Lawful Good', 'Chaotic Neutral'
   career_current text,
+  career_position text,         -- their level/title within the current career
   career_endgame text,
   past_jobs text[] not null default '{}',
+  life_status text not null default 'alive' check (life_status in ('alive', 'dead')),
+  cause_of_death text,
+  death_note text,
   relationship_status text,
   current_partner_id uuid references public.characters (id) on delete set null,
   current_partner_name text,    -- used when the partner has no character page
@@ -109,6 +113,10 @@ alter table public.characters add column if not exists current_partner_id uuid r
 alter table public.characters add column if not exists current_partner_name text;
 alter table public.characters add column if not exists past_partners jsonb not null default '[]';
 alter table public.characters add column if not exists hobbies text[] not null default '{}';
+alter table public.characters add column if not exists career_position text;
+alter table public.characters add column if not exists life_status text not null default 'alive' check (life_status in ('alive', 'dead'));
+alter table public.characters add column if not exists cause_of_death text;
+alter table public.characters add column if not exists death_note text;
 
 create index if not exists characters_generation_idx on public.characters (generation, sort_order);
 create index if not exists characters_parent_one_idx on public.characters (parent_one_id);

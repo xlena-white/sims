@@ -21,7 +21,7 @@ import type {
 } from "./types";
 
 const DEFAULT_SETTINGS: SiteSettings = { title: "The Storybook", subtitle: null, epigraph: null };
-const LITE_COLUMNS = "id, slug, name, generation, photo_url, parent_one_id, parent_two_id";
+const LITE_COLUMNS = "id, slug, name, generation, photo_url, parent_one_id, parent_two_id, life_status";
 
 export async function getSiteSettings(): Promise<SiteSettings> {
   if (PREVIEW_MODE) return previewSettings;
@@ -55,7 +55,7 @@ export async function getGeneration(number: GenerationNumber): Promise<Generatio
 }
 
 export async function getCharactersByGeneration(number: GenerationNumber): Promise<Character[]> {
-  if (PREVIEW_MODE) return previewCharacters.filter((c) => c.generation === number);
+  if (PREVIEW_MODE) return previewCharacters.filter((c) => c.generation === number).sort((a, b) => a.sort_order - b.sort_order);
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("characters")

@@ -12,6 +12,7 @@ import {
   getStorylinesFor,
 } from "@/lib/data";
 import { getFamily, getWebLinks } from "@/lib/family";
+import { describePosition } from "@/lib/sims-data";
 import { GEN_ACCENT, type CharacterLite } from "@/lib/types";
 
 export async function generateMetadata({ params }: PageProps<"/characters/[slug]">): Promise<Metadata> {
@@ -64,6 +65,8 @@ export default async function CharacterPage({ params }: PageProps<"/characters/[
   const family = getFamily(character, everyone);
   const web = getWebLinks(character, family, relationships, everyone);
   const accent = GEN_ACCENT[character.generation];
+  const position = describePosition(character.career_current, character.career_position);
+  const dead = character.life_status === "dead";
 
   return (
     <div className="mx-auto max-w-7xl px-5 pb-24 pt-28 sm:px-10">
@@ -81,10 +84,10 @@ export default async function CharacterPage({ params }: PageProps<"/characters/[
         <div className="card aspect-[4/5] overflow-hidden">
           {character.photo_url ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={character.photo_url} alt={character.name} className="h-full w-full object-cover" />
+            <img src={character.photo_url} alt={character.name} className={`h-full w-full object-cover ${dead ? "grayscale" : ""}`} />
           ) : (
             <div className="flex h-full items-center justify-center bg-ink">
-              <span className={`font-display text-8xl font-bold ${accent.text}`}>
+              <span className={`font-display text-8xl font-bold ${dead ? "text-stone" : accent.text}`}>
                 {initials(character.name)}
               </span>
             </div>
@@ -96,9 +99,18 @@ export default async function CharacterPage({ params }: PageProps<"/characters/[
             <span className={`pill bg-ink-raised ${accent.text}`}>Generation {character.generation}</span>
             {character.moral_alignment && <span className="pill bg-ink-raised text-chalk-muted">{character.moral_alignment}</span>}
             {character.relationship_status && <span className="pill bg-ink-raised text-chalk-muted">{character.relationship_status}</span>}
+            {dead && <span className="pill bg-stone/15 text-stone">Passed away</span>}
           </div>
           <h1 className="mt-5 font-display text-5xl font-semibold leading-none sm:text-6xl">{character.name}</h1>
           {character.tagline && <p className="mt-4 font-display text-xl italic text-chalk-muted">{character.tagline}</p>}
+
+          {dead && (
+            <div className="mt-6 rounded-2xl border border-ink-line bg-ink-raised p-4">
+              <p className="label text-chalk-faint">In memory</p>
+              <p className="mt-1.5 font-medium">{character.cause_of_death ?? "Cause unknown"}</p>
+              {character.death_note && <p className="mt-1 text-sm leading-relaxed text-chalk-muted">{character.death_note}</p>}
+            </div>
+          )}
 
           <div className="mt-8">
             <h2 className="label text-chalk-faint">Traits</h2>
@@ -124,8 +136,23 @@ export default async function CharacterPage({ params }: PageProps<"/characters/[
       <div className="mt-10 grid gap-5 lg:grid-cols-3">
         <Section title="Work">
           <dl>
-            <Row label="Current job">{character.career_current ?? <Empty>Not set</Empty>}</Row>
-            <Row label="Dream job">{character.career_endgame ?? <Empty>Not set</Empty>}</Row>
+            <Row label="Career">{character.career_current ?? <Empty>Not set</Empty>}</Row>
+            <Row label="Position">
+              {character.career_position ? (
+                <>
+                  <span className="block">{character.career_position}</span>
+                  {position && (
+                    <span className="block text-sm text-chalk-faint">
+                      Level {position.level}
+                      {position.branch && ` · ${position.branch} branch`}
+                    </span>
+                  )}
+                </>
+              ) : (
+                <Empty>Not set</Empty>
+              )}
+            </Row>
+            <Row label="Dream career">{character.career_endgame ?? <Empty>Not set</Empty>}</Row>
             <Row label="Past jobs">
               {character.past_jobs.length ? (
                 <ul className="space-y-1">

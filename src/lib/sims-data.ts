@@ -1,5 +1,6 @@
 // Reference lists for The Sims 4, used as suggestions in the admin forms.
 // Anything not listed here (new packs, mods, CC) can still be typed in freely.
+import { CAREER_TRACKS } from "./sims-careers";
 
 export interface TraitGroup {
   name: string;
@@ -12,35 +13,38 @@ export const TRAIT_GROUPS: TraitGroup[] = [
     name: "Emotional",
     color: "peach",
     traits: [
-      "Cheerful", "Creative", "Erratic", "Genius", "Gloomy", "Goofball", "Hot-Headed",
-      "Paranoid", "Romantic", "Romantically Reserved", "Self-Assured", "Unflirty",
+      "Ambitious", "Cheerful", "Childish", "Clumsy", "Creative", "Erratic", "Genius", "Gloomy",
+      "Goofball", "Hot-Headed", "Lovebug", "Paranoid", "Practice Makes Perfect", "Romantic",
+      "Romantically Reserved", "Self-Assured", "Squeamish", "Unflirty",
     ],
   },
   {
     name: "Hobby",
     color: "sky",
     traits: [
-      "Animal Enthusiast", "Art Lover", "Bookworm", "Cat Lover", "Dance Machine", "Dog Lover",
-      "Foodie", "Geek", "Loves Outdoors", "Maker", "Music Lover", "Recycle Disciple",
+      "Art Lover", "Bookworm", "Dance Machine", "Foodie", "Geek", "Loves Outdoors", "Maker",
+      "Music Lover", "Recycle Disciple",
     ],
   },
   {
     name: "Lifestyle",
     color: "mint",
     traits: [
-      "Active", "Adventurous", "Ambitious", "Child of the Islands", "Child of the Ocean",
-      "Child of the Village", "Childish", "Clumsy", "Freegan", "Glutton", "Green Fiend",
+      "Active", "Adventurous", "Chased by Death", "Child of the Islands", "Child of the Ocean",
+      "Child of the Village", "Competitive", "Disruptive", "Freegan", "Glutton", "Green Fiend",
       "High Maintenance", "Kleptomaniac", "Lactose Intolerant", "Lazy", "Macabre", "Materialistic",
-      "Neat", "Overachiever", "Party Animal", "Perfectionist", "Proper", "Slob", "Snob",
-      "Squeamish", "Vegetarian",
+      "Mystical", "Neat", "Overachiever", "Perfectionist", "Rancher", "Skeptical", "Slob",
+      "Vegetarian",
     ],
   },
   {
     name: "Social",
     color: "lilac",
     traits: [
-      "Bro", "Evil", "Family-Oriented", "Good", "Hates Children", "Insider", "Jealous", "Loner",
-      "Mean", "Noncommittal", "Outgoing", "Self-Absorbed", "Socially Awkward",
+      "Animal Enthusiast", "Bro", "Cat Lover", "Cringe", "Dog Lover", "Evil", "Family-Oriented",
+      "Generous", "Good", "Hates Children", "Horse Lover", "Idealist", "Insider", "Jealous", "Loner",
+      "Loyal", "Mean", "Noncommittal", "Nosy", "Outgoing", "Party Animal", "Plant Lover", "Proper",
+      "Self-Absorbed", "Shady", "Snob", "Socially Awkward",
     ],
   },
   {
@@ -59,8 +63,8 @@ export const TRAIT_GROUPS: TraitGroup[] = [
     traits: [
       "Alluring", "Antiseptic", "Business Savvy", "Carefree", "Collector", "Creatively Gifted",
       "Domestic", "Entrepreneurial", "Essence of Flavor", "Fertile", "Gregarious", "Hardly Hungry",
-      "Highly Driven", "Incredibly Friendly", "Mentor", "Morning Person", "Muser", "Night Owl",
-      "Observant", "Professional Slacker", "Quick Learner", "Shameless", "Speed Reader",
+      "Highly Driven", "Incredibly Friendly", "Legendary Stamina", "Mentor", "Morning Person", "Muser",
+      "Night Owl", "Observant", "Professional Slacker", "Quick Learner", "Shameless", "Speed Reader",
       "Steel Bladder", "Super Green Thumb",
     ],
   },
@@ -74,23 +78,50 @@ export function traitColor(trait: string): TraitGroup["color"] {
   return TRAIT_COLOR.get(trait.toLowerCase()) ?? "stone";
 }
 
+/** Careers with official positions, plus jobs that don't have levels. */
 export const CAREERS = [
-  // Full-time careers
-  "Actor", "Astronaut", "Athlete", "Business", "Civil Designer", "Conservationist", "Criminal",
-  "Critic", "Culinary", "Detective", "Doctor", "Education", "Engineer", "Entertainer", "Gardener",
-  "Interior Decorator", "Law", "Marine Biologist", "Military", "Painter", "Politician",
-  "Reaper", "Romance Consultant", "Salaryperson", "Scientist", "Secret Agent", "Social Media",
-  "Style Influencer", "Tech Guru", "Undertaker", "Writer",
-  // Freelance & self-employed
-  "Freelance Artist", "Freelance Crafter", "Freelance Fashion Photographer", "Freelance Programmer",
-  "Freelance Writer", "Paranormal Investigator", "Business Owner", "Restaurant Owner",
-  "Retail Store Owner", "Vet Clinic Owner",
-  // Part-time & teen jobs
-  "Babysitter", "Barista", "Diver", "Fast Food Employee", "Fisherman", "Lifeguard",
-  "Manual Laborer", "Retail Employee", "Simfluencer", "Video Gamer",
-  // Other
-  "University Student", "Stay-at-Home Parent", "Unemployed", "Retired",
+  ...Object.keys(CAREER_TRACKS),
+  "Freelance Artist", "Freelance Crafter", "Freelance Digital Artist", "Freelance Fashion Photographer",
+  "Freelance Programmer", "Freelance Writer", "Paranormal Investigator", "Business Owner",
+  "Restaurant Owner", "Retail Store Owner", "Vet Clinic Owner", "University Student",
+  "Stay-at-Home Parent", "Unemployed", "Retired",
 ];
+
+export interface PositionGroup {
+  label: string;
+  positions: { title: string; level: number }[];
+}
+
+function findTrack(career: string | null | undefined) {
+  if (!career) return undefined;
+  const key = Object.keys(CAREER_TRACKS).find((k) => k.toLowerCase() === career.trim().toLowerCase());
+  return key ? CAREER_TRACKS[key] : undefined;
+}
+
+/** Positions in a career, grouped into the shared levels and each branch. Empty for unknown/mod careers. */
+export function positionsFor(career: string | null | undefined): PositionGroup[] {
+  const track = findTrack(career);
+  if (!track) return [];
+  const shared = track.levels.map((title, i) => ({ title, level: i + 1 }));
+  const groups: PositionGroup[] = shared.length ? [{ label: Object.keys(track.branches).length ? "Before the branch" : "Levels", positions: shared }] : [];
+  for (const [branch, titles] of Object.entries(track.branches)) {
+    groups.push({
+      label: `${branch} branch`,
+      positions: titles.map((title, i) => ({ title, level: shared.length + i + 1 })),
+    });
+  }
+  return groups;
+}
+
+/** Level and branch for a position, e.g. { level: 8, branch: "Chef" }, when it's an official one. */
+export function describePosition(career: string | null | undefined, position: string | null | undefined) {
+  if (!position) return null;
+  for (const group of positionsFor(career)) {
+    const match = group.positions.find((p) => p.title.toLowerCase() === position.trim().toLowerCase());
+    if (match) return { level: match.level, branch: group.label.endsWith(" branch") ? group.label.replace(/ branch$/, "") : null };
+  }
+  return null;
+}
 
 export const HOBBIES = [
   "Acting", "Archaeology", "Baking", "Bowling", "Charisma", "Comedy", "Cooking", "Cross-Stitch",
@@ -121,3 +152,10 @@ export const RELATIONSHIP_TYPES = [
 ];
 
 export const RELATIONSHIP_STATES = ["active", "ended", "complicated"];
+
+export const DEATH_CAUSES = [
+  "Old Age", "Fire", "Drowning", "Electrocution", "Starvation", "Hysteria (laughter)",
+  "Embarrassment", "Anger", "Overexertion", "Cowplant", "Poisoned Pufferfish", "Frozen",
+  "Overheating", "Lightning", "Meteorite", "Murphy Bed", "Sun (vampire)", "Killer Chicken",
+  "Rabid Rodent Fever", "Mother Plant", "Childbirth", "Murder", "Accident", "Illness",
+];
